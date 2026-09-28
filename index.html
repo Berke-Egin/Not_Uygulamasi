@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="tr">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#f5f4f0"><title>Notika — Kişisel not alanın</title><link rel="stylesheet" href="style.css"></head>
+<body>
+<aside class="sidebar">
+  <a class="brand" href="./"><span class="brand-icon">n.</span>notika<span class="brand-dot">●</span></a>
+  <div class="workspace"><span class="avatar">B</span><div>Kişisel alanım<small>Biraz daha düzenli, biraz daha hafif.</small></div></div>
+  <button class="new-note" id="newNote"><span>＋</span> Yeni not oluştur <kbd>N</kbd></button>
+  <div class="nav-label">ÇALIŞMA ALANI</div>
+  <nav id="navigation">
+    <button data-view="all" class="active"><span>▦</span> Tüm notlar <b id="allCount">0</b></button>
+    <button data-view="pinned"><span>⚑</span> Sabitlenenler <b id="pinnedCount">0</b></button>
+    <button data-view="reminders"><span>◷</span> Hatırlatıcılar <b id="reminderCount">0</b></button>
+    <button data-view="archive"><span>▤</span> Arşiv <b id="archiveCount">0</b></button>
+  </nav>
+  <div class="sidebar-bottom"><div class="local-info"><span>◈</span><strong>Sadece sana ait.</strong><p>Notların bu tarayıcıda saklanır ve otomatik olarak kaydedilir.</p><span class="local-badge">● &nbsp; Yerel depolama</span></div><button id="exportBtn" class="utility">↗ &nbsp; Notları dışa aktar</button><button id="importBtn" class="utility">↙ &nbsp; Yedekten içe aktar</button><input id="importFile" type="file" accept="application/json,.json" hidden><div class="sidebar-footer">Küçük notlar, büyük fikirler. <span>✧</span></div></div>
+</aside>
+<main>
+  <header class="topbar"><div><span class="breadcrumb">Kişisel alanım</span><span class="slash">/</span><span id="breadcrumbView">Tüm notlar</span></div><span class="save-state" id="saveState">● &nbsp; Tüm değişiklikler kaydedildi</span></header>
+  <section class="page">
+    <div class="page-heading"><div><div class="eyebrow" id="todayLabel"></div><h1 id="pageTitle">Düşüncelerine yer aç.</h1><p id="pageSubtitle">Aklındakileri yaz, önceliklerini belirle. Gerisini bize bırak.</p></div><div class="heading-art" aria-hidden="true">✳</div></div>
+    <div id="reminderBanner" class="reminder-banner" hidden></div>
+    <div class="stats"><div><span class="stat-icon lavender">▦</span><div><strong id="statTotal">0</strong><small>Toplam not</small></div><span class="stat-caption">Fikirlerin burada</span></div><div><span class="stat-icon peach">⚑</span><div><strong id="statHigh">0</strong><small>Yüksek öncelikli</small></div><span class="stat-caption">Önce bunlara bak</span></div><div><span class="stat-icon green">◷</span><div><strong id="statReminders">0</strong><small>Bekleyen hatırlatıcı</small></div><span class="stat-caption">Aklında kalmasın</span></div></div>
+    <div class="section-heading"><h2 id="listTitle">Notların <span id="listCount">0</span></h2><div class="view-label">▦ &nbsp; Kart görünümü</div></div>
+    <div class="toolbar"><label class="search">⌕ <input id="search" placeholder="Notlarında bir şeyler ara…" aria-label="Notlarda ara"><kbd>/</kbd></label><select id="priorityFilter" aria-label="Öncelik filtresi"><option value="all">Tüm öncelikler</option><option value="high">Yüksek öncelik</option><option value="medium">Orta öncelik</option><option value="low">Düşük öncelik</option></select><select id="sort" aria-label="Sıralama"><option value="updated">Son düzenlenen</option><option value="created">Son oluşturulan</option><option value="priority">Önem sırası</option><option value="reminder">Hatırlatıcı tarihi</option></select></div>
+    <div class="filter-tabs" id="tabs"><button data-filter="all" class="selected">Hepsi</button><button data-filter="personal">Kişisel</button><button data-filter="work">İş</button><button data-filter="ideas">Fikirler</button><button data-filter="education">Öğrenme</button></div>
+    <div class="notes-grid" id="notesGrid"></div>
+    <footer class="page-footer"><span>◈ &nbsp; Sen yazmaya odaklan. Notların otomatik kaydedilir.</span><span>Bir fikirle başla. <span class="purple">✧</span></span></footer>
+  </section>
+</main>
+<dialog id="editor"><form id="noteForm"><div class="editor-header"><span id="editorLabel">YENİ NOT</span><button type="button" class="icon-button" id="closeEditor" aria-label="Kapat">✕</button></div><input id="noteTitle" class="title-input" placeholder="Notuna bir başlık ver…" maxlength="160" aria-label="Not başlığı"><textarea id="noteBody" placeholder="Aklından neler geçiyor?" aria-label="Not içeriği"></textarea><div class="editor-options"><label>Öncelik<select id="notePriority"><option value="low">Düşük</option><option value="medium">Orta</option><option value="high">Yüksek</option></select></label><label>Kategori<select id="noteCategory"><option value="personal">Kişisel</option><option value="work">İş</option><option value="ideas">Fikirler</option><option value="education">Öğrenme</option></select></label><label>Hatırlatıcı<input id="noteReminder" type="datetime-local"></label></div><div class="color-row"><span>Not rengi</span><div id="colors"></div><label class="pin-label"><input id="notePinned" type="checkbox"> Sabitle</label></div><p class="reminder-help">Hatırlatıcılar uygulama açıkken kontrol edilir. Kaçırdıkların bir sonraki açılışta gösterilir.</p><div class="editor-footer"><span id="draftState">Yazdıkların otomatik kaydedilir.</span><button type="submit" class="primary">Tamamla <span>↗</span></button></div></form></dialog>
+<dialog id="confirmDialog"><div class="confirm-content"><h2>Bu not silinsin mi?</h2><p>Bu işlem geri alınamaz. İstersen notunu arşivleyebilirsin.</p><div><button id="cancelDelete" class="secondary">Vazgeç</button><button id="confirmDelete" class="danger">Notu sil</button></div></div></dialog>
+<div class="toast" id="toast" role="status"></div>
+<script src="app.js"></script>
+</body></html>
